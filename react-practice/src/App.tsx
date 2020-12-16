@@ -1,23 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
 
-const App = () => {
+const fetchAPIData = () => {
+    // return axios.get('https://dog.ceo/api/breeds/image/random')
+    return axios.get('https://randomuser.me/api')
+      .then(data => {
+        // handle success
+        console.log(data);
+        return JSON.stringify(data);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+}
 
-    const [ counter, setCounter ] = useState(0)
+export default function App () {
 
-    const fetchAPIData = () => {
-        return axios.get('https://dog.ceo/api/breeds/image/random')
-          .then(data => {
-            // handle success
-            console.log(data);
-            return data.data.message;
-          })
-          .catch(err => {
-            console.log(err);
-          })
-    }
+  const [ counter, setCounter ] = useState(0)
+
+  useEffect(() => {
+    const randomData = await
+
+      }, []);
+
 
   return (
     <div className="App">
@@ -34,14 +41,9 @@ const App = () => {
           }}> Reset </button>
 
           <br></br>
-          <button onClick={ () => {
-          fetchAPIData();
-          }}>Dogs!!  </button>
+
 
       </header>
     </div>
   );
 }
-
-
-export default App;
