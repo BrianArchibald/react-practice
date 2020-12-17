@@ -9,7 +9,7 @@ const fetchAPIData = () => {
       .then(data => {
         // handle success
         console.log(data);
-        return JSON.stringify(data);
+        return JSON.stringify(data, null, 2);
       })
       .catch(err => {
         console.log(err);
@@ -18,11 +18,13 @@ const fetchAPIData = () => {
 
 export default function App () {
 
-  const [ counter, setCounter ] = useState(0)
+  const [ counter, setCounter ] = useState(0);
+  const [ randomUserDataJSON, setRandomUserDataJSON] = useState('');
 
   useEffect(() => {
-    const randomData = await
-
+          fetchAPIData().then(randomData => {
+            setRandomUserDataJSON(randomData || 'No data found');
+                  })
       }, []);
 
 
@@ -41,6 +43,10 @@ export default function App () {
           }}> Reset </button>
 
           <br></br>
+
+          <pre>
+          {randomUserDataJSON}
+          </pre>
 
 
       </header>
