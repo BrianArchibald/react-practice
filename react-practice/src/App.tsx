@@ -3,10 +3,10 @@ import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
 
-const fetchAPIData = () => {
+const fetchAPIData = (pageNumber: number) => {
     // return axios.get('https://dog.ceo/api/breeds/image/random')
     return axios
-      .get('https://randomuser.me/api')
+      .get(`https://randomuser.me/api?page=${pageNumber}`)
       .then(({ data }) => {
         console.log(data);
         return data;
@@ -23,13 +23,15 @@ const getFullUserName = (userInfo: any) => {
 
 export default function App () {
   const [ counter, setCounter ] = useState(0);
-  const [ userInfos, setUserInfos] = useState<any>([])
+  const [ nextPageNumber, setNextPageNumber ] = useState(1);
+  const [ userInfos, setUserInfos] = useState<any>([]);
   const [ randomUserDataJSON, setRandomUserDataJSON] = useState('');
 
   useEffect(() => {
-      fetchAPIData().then(randomData => {
+      fetchAPIData(nextPageNumber).then(randomData => {
         setRandomUserDataJSON(JSON.stringify(randomData, null, 2) || 'No data found');
         setUserInfos(randomData.results);
+        setNextPageNumber(randomData.info.page + 1);
        })
   }, []);
 
@@ -47,11 +49,15 @@ export default function App () {
           setCounter(0);
           }}> Reset </button>
           <br></br>
+          <button onClick={ () => {
+          fetchAPIData(nextPageNumber + 1);
+          }}> Fetch Next User </button>
+          <br></br>
           {
           userInfos.map((userInfo: any, idx: number) => (
               <div key={idx}>
                   <p>{getFullUserName(userInfo)}</p>
-                  <img src={userInfo.picture.large}></img>
+                  <img src={userInfo.picture.large} alt=''></img>
               </div>
             ))
           }
