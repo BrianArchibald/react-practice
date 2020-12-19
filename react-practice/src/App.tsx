@@ -27,12 +27,25 @@ export default function App () {
   const [ userInfos, setUserInfos] = useState<any>([]);
   const [ randomUserDataJSON, setRandomUserDataJSON] = useState('');
 
-  useEffect(() => {
+  const fetchNextUser = () => {
       fetchAPIData(nextPageNumber).then(randomData => {
-        setRandomUserDataJSON(JSON.stringify(randomData, null, 2) || 'No data found');
-        setUserInfos(randomData.results);
+        // setRandomUserDataJSON(JSON.stringify(randomData, null, 2) || 'No data found');
+        const newUserInfos = [
+            ...userInfos,
+            ...randomData.results
+        ]
+        setUserInfos(newUserInfos);
         setNextPageNumber(randomData.info.page + 1);
-       })
+       });
+  }
+
+  useEffect(() => {
+      fetchNextUser();
+      // fetchAPIData(nextPageNumber).then(randomData => {
+      //   setRandomUserDataJSON(JSON.stringify(randomData, null, 2) || 'No data found');
+      //   setUserInfos(randomData.results);
+      //   setNextPageNumber(randomData.info.page + 1);
+      //  });
   }, []);
 
 
@@ -45,12 +58,15 @@ export default function App () {
           setCounter(counter + 1);
           }}> Add 1 </button>
           <br></br>
+
           <button onClick={ () => {
           setCounter(0);
           }}> Reset </button>
           <br></br>
+
           <button onClick={ () => {
-          fetchAPIData(nextPageNumber + 1);
+          // fetchAPIData(nextPageNumber + 1);
+          fetchNextUser();
           }}> Fetch Next User </button>
           <br></br>
           {
